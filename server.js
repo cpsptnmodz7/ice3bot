@@ -529,25 +529,24 @@ function extractMetaFromText(text) {
 
 async function sendToAdminTicket(fromStr, data) {
     const isHuman = data.metaLines.some(l => l.includes('Mode: HUMAN'));
-    const title = isHuman ? `👨‍💻 <b>SEDANG DIBANTU ADMIN</b>` : `💬 <b>LOG CHAT AI</b>`;
     
     const lines = [
-        title,
-        `👤 <b>User:</b> ${fromStr}`,
+        `🎟️ <b>TIKET BANTUAN BARU</b>`,
+        `👤 ${fromStr}`,
         '',
-        ...data.contentLines,
+        ...data.metaLines.map(x => `${x}`),
         '',
-        `—`.repeat(15),
-        `<blockquote expandable>⚙️ <b>Data Sistem (Untuk Ambil Tiket):</b>\n${data.metaLines.join('\n')}</blockquote>`
+        ...data.contentLines
     ];
 
-    const extra = {
-        reply_markup: {
+    const extra = {};
+    if (!isHuman) {
+        extra.reply_markup = {
             inline_keyboard: [
-                [{ text: 'ðŸ™‹â€â™‚ï¸ Ambil Tiket', callback_data: `claim_${Date.now()}` }]
+                [{ text: '🙋‍♂️ Ambil Tiket', callback_data: `claim_${Date.now()}` }]
             ]
-        }
-    };
+        };
+    }
 
     if (data.media) {
         if (data.media.type === 'photo') {
