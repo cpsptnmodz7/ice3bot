@@ -1,0 +1,12 @@
+{
+  "name": "ice3-bot-telegram",
+  "version": "1.0.0",
+  "description": "Telegram Broadcast Bot - Check Chat ID",
+  "main": "check_id.js",
+  "scripts": {
+    "check-id": "node check_id.js"
+  },
+  "dependencies": {
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}
