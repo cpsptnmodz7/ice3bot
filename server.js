@@ -54,7 +54,7 @@ let tgContacts = loadJSON(TG_CONTACTS_FILE, {});
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const ADMIN_GROUP_ID = process.env.ADMIN_GROUP_ID;
 const LOG_GROUP_ID = process.env.LOG_GROUP_ID || ADMIN_GROUP_ID;
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const DASHBOARD_PASSWORD = process.env.DASHBOARD_PASSWORD || 'admin123';
 const ELEVEN_API_KEY = process.env.ELEVEN_API_KEY || '';
 const ELEVEN_VOICE_ID = process.env.ELEVEN_VOICE_ID || '';
@@ -105,9 +105,9 @@ function matchTrigger(rawText) {
 const chatHistories = {};
 const MAX_HISTORY = 10;
 
-// ===================== OPENAI AI =====================
-async function getOpenAIResponse(prompt, targetId = 'unknown', pushName = 'Kakak') {
-    if (!OPENAI_API_KEY) return 'Maaf kak, Melody lagi istirahat sebentar ya. ðŸ™';
+// ===================== GEMINI AI =====================
+async function getGeminiResponse(prompt, targetId = 'unknown', pushName = 'Kakak') {
+    if (!GEMINI_API_KEY) return 'Maaf kak, Melody lagi istirahat sebentar ya. 🙏';
 
     // Ambil profil member (jika ada) dari WA sync atau TG
     const waContact = waContactsSync[targetId] || {};
@@ -124,8 +124,7 @@ async function getOpenAIResponse(prompt, targetId = 'unknown', pushName = 'Kakak
         if (fs.existsSync(kPath)) knowledge = fs.readFileSync(kPath, 'utf-8');
     } catch (e) { }
 
-    const systemPrompt = `
-Kamu adalah Melody, CS ICE3BET yang sangat ramah, ceria, dan membantu. 
+    const systemPrompt = `Kamu adalah Melody, CS ICE3BET yang sangat ramah, ceria, dan membantu. 
 Knowledge Base: ${knowledge}
 
 TUGAS: Jawab member dengan natural. Jika member tanya depo/wd/link/rtp, arahkan sesuai knowledge. Jika member marah, tenangkan. 
@@ -139,60 +138,52 @@ ATURAN FORMAT PENTING:
 
 --- DATA MEMBER ---
 Nama Member: ${realName}
-Poin Loyalitas (Keaktifan): ${points}
-`;
+Poin Loyalitas (Keaktifan): ${points}`;
 
-    // Susun array messages untuk OpenAI
-    const messages = [
-        { role: 'system', content: systemPrompt }
-    ];
-
-    // Masukkan history
+    const contents = [];
     chatHistories[targetId].forEach(h => {
-        messages.push({
-            role: h.role === 'user' ? 'user' : 'assistant',
-            content: h.text
+        contents.push({
+            role: h.role,
+            parts: [{ text: h.text }]
         });
     });
 
-    // Masukkan pesan baru
-    messages.push({ role: 'user', content: prompt });
+    contents.push({
+        role: "user",
+        parts: [{ text: prompt }]
+    });
 
     try {
-        const url = 'https://api.openai.com/v1/chat/completions';
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         const res = await axios.post(url, {
-            model: 'gpt-4o-mini',
-            messages: messages,
-            temperature: 0.7
-        }, {
-            headers: {
-                'Authorization': `Bearer ${OPENAI_API_KEY}`,
-                'Content-Type': 'application/json'
+            system_instruction: {
+                parts: { text: systemPrompt }
             },
+            contents: contents,
+            generationConfig: {
+                temperature: 0.7
+            }
+        }, {
+            headers: { 'Content-Type': 'application/json' },
             timeout: 30000
         });
 
-        let reply = res.data?.choices?.[0]?.message?.content || 'Ada yang bisa Melody bantu lagi kak?';
+        let reply = res.data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Ada yang bisa Melody bantu lagi kak?';
         
-        // Strip markdown link format [text](url) â†’ just url
         reply = reply.replace(/\[([^\]]*)\]\(([^)]+)\)/g, '$2');
-        // Strip double asterisks **text** â†’ *text*
         reply = reply.replace(/\*\*([^*]+)\*\*/g, '*$1*');
-        // Strip triple asterisks ***text*** â†’ *text*
         reply = reply.replace(/\*\*\*([^*]+)\*\*\*/g, '*$1*');
         
-        // Simpan ke riwayat (format untuk kita)
         chatHistories[targetId].push({ role: 'user', text: prompt });
         chatHistories[targetId].push({ role: 'model', text: reply });
         
-        // Batasi maksimal pesan (10 pasang = 20 pesan)
         if (chatHistories[targetId].length > MAX_HISTORY * 2) {
             chatHistories[targetId] = chatHistories[targetId].slice(-(MAX_HISTORY * 2));
         }
 
         return reply;
     } catch (e) {
-        console.error('❌ OPENAI API ERROR:', e.message);
+        console.error('❌ GEMINI API ERROR:', e.message);
         if (e.response) {
             console.error('❌ Status:', e.response.status);
             console.error('❌ Data:', JSON.stringify(e.response.data));
@@ -1088,7 +1079,7 @@ async function handleTelegramMessage(message) {
         }
 
         // --- MODE AI (GEMINI) ---
-        let aiReply = await getOpenAIResponse(message.text, chatId.toString(), fromName);
+        let aiReply = await getGeminiResponse(message.text, chatId.toString(), fromName);
 
         // Handover check (AI menyerah)
         const aiSurrender = aiReply.includes('[TIKET]');
@@ -1170,7 +1161,7 @@ async function handleTelegramMessage(message) {
         }
 
         // --- OTAK AI GEMINI UNTUK VOICE TG ---
-        let aiReply = await getOpenAIResponse(transcribed, chatId.toString(), fromName);
+        let aiReply = await getGeminiResponse(transcribed, chatId.toString(), fromName);
 
         // Handover check
         if (aiReply.includes('[TIKET]')) {
@@ -1339,7 +1330,7 @@ app.post('/wa/incoming', upload.any(), async (req, res) => {
                     console.log('ðŸŽ™ï¸ Melody Processing Voice Note...');
                     const sttText = await elevenSTTFromOgg(audioFile.buffer);
                     if (sttText) {
-                        let aiReply = await getOpenAIResponse(sttText, jid, pushName);
+                        let aiReply = await getGeminiResponse(sttText, jid, pushName);
 
                         // Handover check
                         if (aiReply.includes('[TIKET]')) {
@@ -1390,7 +1381,7 @@ app.post('/wa/incoming', upload.any(), async (req, res) => {
 
         // --- MODE AI (GEMINI) ---
         if (type === 'TEXT' && !waJid.includes('@g.us')) {
-            let aiReply = await getOpenAIResponse(text, jid, pushName);
+            let aiReply = await getGeminiResponse(text, jid, pushName);
 
             // Handover check (AI menyerah)
             const aiSurrender = aiReply.includes('[TIKET]');
