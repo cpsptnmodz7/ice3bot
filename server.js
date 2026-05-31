@@ -192,7 +192,11 @@ Poin Loyalitas (Keaktifan): ${points}
 
         return reply;
     } catch (e) {
-        console.error('âŒ OPENAI API ERROR:', e.response?.data?.error || e.message);
+        console.error('❌ OPENAI API ERROR:', e.message);
+        if (e.response) {
+            console.error('❌ Status:', e.response.status);
+            console.error('❌ Data:', JSON.stringify(e.response.data));
+        }
         return 'Maaf kak, ada kendala teknis sedikit. Kabari Melody lagi ya!';
     }
 }
