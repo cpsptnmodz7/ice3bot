@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 require('dotenv').config();
 
@@ -1474,7 +1474,7 @@ app.listen(PORT, async () => {
             console.log('ðŸ” Current Webhook Status:', JSON.stringify(info.data.result));
 
             // 2. Force update if RENDER_URL exists
-            const currentUrl = process.env.RENDER_URL || 'https://tg-elevenlabs-bot.onrender.com';
+            const currentUrl = process.env.RENDER_URL || 'https://ice3bot.onrender.com';
             const targetUrl = `${currentUrl.replace(/\/$/, '')}/webhook`;
 
             console.log(`ðŸš€ Force setting webhook to: ${targetUrl}`);

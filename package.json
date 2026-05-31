@@ -7,6 +7,11 @@
     "check-id": "node check_id.js"
   },
   "dependencies": {
+    "axios": "^1.16.1",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "form-data": "^4.0.5",
+    "multer": "^2.1.1",
     "node-telegram-bot-api": "^0.66.0"
   }
 }
