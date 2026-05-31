@@ -537,13 +537,17 @@ function extractMetaFromText(text) {
 }
 
 async function sendToAdminTicket(fromStr, data) {
+    const isHuman = data.metaLines.some(l => l.includes('Mode: HUMAN'));
+    const title = isHuman ? `👨‍💻 <b>SEDANG DIBANTU ADMIN</b>` : `💬 <b>LOG CHAT AI</b>`;
+    
     const lines = [
-        `ðŸŽŸï¸ <b>TIKET BANTUAN BARU</b>`,
-        `ðŸ‘¤ ${fromStr}`,
+        title,
+        `👤 <b>User:</b> ${fromStr}`,
         '',
-        ...data.metaLines.map(x => `<code>${x}</code>`),
+        ...data.contentLines,
         '',
-        ...data.contentLines
+        `—`.repeat(15),
+        `<blockquote expandable>⚙️ <b>Data Sistem (Untuk Ambil Tiket):</b>\n${data.metaLines.join('\n')}</blockquote>`
     ];
 
     const extra = {
