@@ -730,12 +730,44 @@ async function handleTelegramMessage(message) {
 
     if (cmd && IS_ADMIN) {
         if (cmd === '/ping') {
-            return tgSendText(chatId, `ðŸ“ <b>PONG!</b> Melody aktif kak!\n\nSesi WA: ${waActiveSessions}\nKontak TG: ${Object.keys(tgContacts).length}`);
+            return tgSendText(chatId, `ðŸ “ <b>PONG!</b> Melody aktif kak!\n\nSesi WA: ${waActiveSessions}\nKontak TG: ${Object.keys(tgContacts).length}`);
+        }
+
+        if (cmd === '/bcgroup' || cmd === '/bcgrup') {
+            if (!tgConfig.playerGroupId) {
+                return tgSendText(chatId, '⚠️ <b>Grup Pemain belum terdaftar!</b>\nSilakan gunakan perintah <code>/setgrup</code> terlebih dahulu di dalam grup pemain.');
+            }
+
+            // Jika admin mereply sebuah pesan (teks/media/stiker/dll)
+            if (message.reply_to_message) {
+                const res = await tgCall('copyMessage', {
+                    chat_id: tgConfig.playerGroupId,
+                    from_chat_id: chatId,
+                    message_id: message.reply_to_message.message_id
+                });
+                if (res) {
+                    return tgSendText(chatId, '✅ <b>Broadcast Berhasil!</b> Pesan telah disalin ke grup pemain.');
+                } else {
+                    return tgSendText(chatId, '❌ <b>Broadcast Gagal!</b> Terjadi kesalahan saat menyalin pesan.');
+                }
+            }
+
+            // Jika mengirim teks biasa setelah command
+            if (!args) {
+                return tgSendText(chatId, '⚠️ <b>Format Salah!</b>\nGunakan: <code>/bcgroup [pesan]</code> atau reply pesan apa saja dengan ketik <code>/bcgroup</code>.');
+            }
+
+            const res = await tgSendText(tgConfig.playerGroupId, args);
+            if (res) {
+                return tgSendText(chatId, '✅ <b>Broadcast Berhasil!</b> Pesan teks telah dikirim ke grup pemain.');
+            } else {
+                return tgSendText(chatId, '❌ <b>Broadcast Gagal!</b> Terjadi kesalahan saat mengirim pesan teks.');
+            }
         }
 
         if (cmd === '/broadcast') {
             if (!args) return tgSendText(chatId, 'Usage: /broadcast [text]');
-            await tgSendText(chatId, 'â³ Starting broadcast to all contacts...');
+            await tgSendText(chatId, 'â ³ Starting broadcast to all contacts...');
             const r = await callWABridgeAPI('/broadcast', { text: args }, 'POST');
             if (!r.ok) return tgSendText(chatId, `âŒ Failed: ${r.error}`);
             return;
@@ -911,7 +943,8 @@ async function handleTelegramMessage(message) {
                 `/broadcast_tg [text] (All TG)\n` +
                 `/broadcast_wa [jids] [text]\n` +
                 `/broadcast_loc [lat],[lon] [radius_km] [text]\n` +
-                `/broadcast_media [caption] (Balas ke gambar)\n\n` +
+                `/broadcast_media [caption] (Balas ke gambar)\n` +
+                `/bcgroup [text] (Ke Grup Pemain, bisa reply media)\n\n` +
                 `<b>Kontak & Lokasi:</b>\n` +
                 `/set_lokasi [nomor_WA] [lat],[lon]\n` +
                 `/contacts_count\n` +
@@ -1058,6 +1091,27 @@ async function handleTelegramMessage(message) {
                 // Karena Melody bukan admin, kita hanya beri teguran keras
                 await tgSendText(chatId, `âš ï¸ <b>PERINGATAN Melody</b> âš ï¸\n\nHalo Kak @${from.username || from.first_name}, dilarang sebar link selain ICE3BET di sini ya! (ChatID: ${chatId}) ðŸ¤«ðŸ‘Š`);
             }
+        }
+
+        // --- TRIGGER WORDS FOR PLAYERS ---
+        const lowerText = text.toLowerCase().trim();
+        if (lowerText === 'link' || lowerText === 'link alternatif' || lowerText === '/link') {
+            const linkText = `🚀 <b>LINK RESMI ICE3BET</b> 🚀\n\n` +
+                `👉 <b>Link Login/Daftar:</b> <a href="https://cutt.ly/ice3bet-alternatif2">KLIK DI SINI</a>\n` +
+                `📈 <b>Link RTP Live Gacor:</b> <a href="https://cutt.ly/ice3rtp">CEK RTP GACOR</a>\n\n` +
+                `Main sekarang dan nikmati bonus New Member 100% serta Garansi Kekalahan 100%! Semoga JP Paus kak! 💰💸`;
+            await tgSendText(chatId, linkText);
+            return;
+        }
+
+        if (lowerText === 'adminlist' || lowerText === '/adminlist') {
+            const adminListText = `👮‍♂️ <b>LAYANAN DUKUNGAN ICE3BET</b> 👮‍♂️\n\n` +
+                `Halo Kak! Jika Kakak membutuhkan bantuan seputar deposit, withdraw, atau pertanyaan lainnya, silakan hubungi:\n` +
+                `- <b>Customer Service (Situs Utama):</b> Hubungi Live Chat 24 Jam di website kami.\n` +
+                `- <b>Admin Grup:</b> Hubungi salah satu Admin/Moderator yang ada di daftar anggota grup ini.\n\n` +
+                `Pastikan selalu bertransaksi di link resmi dan jangan memberikan password/OTP kepada siapa pun ya kak! 🔒✨`;
+            await tgSendText(chatId, adminListText);
+            return;
         }
 
         return; // Selesai untuk grup
