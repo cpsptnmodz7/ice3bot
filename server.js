@@ -701,7 +701,7 @@ async function handleTelegramMessage(message) {
                                 { text: '\uD83D\uDCC8 RTP Live', url: 'https://cutt.ly/ice3rtp' }
                             ],
                             [
-                                { text: '\uD83C\uDFC6 Tournament Parlay', url: 'https://cutt.ly/ice3bet-alternatif2' }
+                                { text: '\uD83C\uDFC6 Tournament Parlay', url: 'https://www.facebook.com/groups/warungice3' }
                             ]
                         ]
                     }
