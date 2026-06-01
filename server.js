@@ -685,15 +685,29 @@ async function handleTelegramMessage(message) {
             for (const newMember of message.new_chat_members) {
                 if (newMember.is_bot) continue;
                 const name = newMember.first_name || 'Kakak';
-                const welcomeText = `ðŸŽ‰ <b>SELAMAT DATANG DI ICE3BET!</b> ðŸŽ‰\n\n` +
-                    `Halo <b>${name}</b>! Selamat bergabung di komunitas ICE3BET. Melody siap bantu kakak setiap hari. ðŸ˜Š\n\n` +
-                    `ðŸŽ <b>Promo Spesial Buat Kamu:</b> \n` +
-                    `- Bonus New Member 100%\n` +
-                    `- Garansi Kekalahan 100% Saldo Kembali\n\n` +
-                    `ðŸš€ <b>Link Login:</b> <a href="https://cutt.ly/ice3bet-alternatif2">KLIK DI SINI</a>\n` +
-                    `ðŸ“ˆ <b>Link RTP:</b> <a href="https://cutt.ly/ice3rtp">CEK RTP GACOR</a>\n\n` +
-                    `Semoga JP Paus di sini ya kak! ðŸ’°ðŸ’¸`;
-                await tgSendText(chatId, welcomeText);
+                const welcomeText = `\uD83C\uDF89 <b>WELCOME TO ICE3BET GAMING!</b> \uD83C\uDF89\n\n` +
+                    `Halo Kak <b>${name}</b>! Selamat datang di grup resmi ICE3BET! \uD83E\uDD73\u2728\n` +
+                    `Senang banget bisa ketemu Kakak di sini. Melody siap nemenin dan bantuin Kakak 24 jam nonstop biar mainnya makin asik! \uD83D\uDE0E\n\n` +
+                    `Di grup ini, Kakak bebas berbagi pola permainan, info bocoran slot gacor, diskusi game, hingga info promo terbaru yang pastinya melimpah ruah! \uD83C\uDF81\uD83D\uDCB0\n\n` +
+                    `\u26A0\uFE0F <b>PEMBERITAHUAN PENTING:</b>\n` +
+                    `Waspada terhadap modus penipuan oleh oknum yang mengatasnamakan Admin ICE3BET. Selalu bertransaksi melalui situs resmi ya kak! Ketik <b>adminlist</b> untuk melihat daftar admin resmi grup ini.\n\n` +
+                    `Semoga hari ini beruntung dan JP Paus luar biasa bareng ICE3BET! \uD83D\uDE4F\uD83D\uDCB8`;
+
+                const extra = {
+                    reply_markup: {
+                        inline_keyboard: [
+                            [
+                                { text: '\uD83D\uDD17 Link Aktif', url: 'https://cutt.ly/ice3bet-alternatif2' },
+                                { text: '\uD83D\uDCC8 RTP Live', url: 'https://cutt.ly/ice3rtp' }
+                            ],
+                            [
+                                { text: '\uD83C\uDFC6 Tournament Parlay', url: 'https://cutt.ly/ice3bet-alternatif2' }
+                            ]
+                        ]
+                    }
+                };
+
+                await tgSendText(chatId, welcomeText, extra);
                 console.log(`ðŸ‘‹ Sent Welcome to TG: ${name}`);
             }
         }
