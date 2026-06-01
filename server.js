@@ -531,8 +531,8 @@ async function sendToAdminTicket(fromStr, data) {
     const isHuman = data.metaLines.some(l => l.includes('Mode: HUMAN'));
     
     const lines = [
-        `🎟️ <b>TIKET BANTUAN BARU</b>`,
-        `👤 ${fromStr}`,
+        `\uD83C\uDFAB <b>TIKET BANTUAN BARU</b>`,
+        `\uD83D\uDC64 ${fromStr}`,
         '',
         ...data.metaLines.map(x => `${x}`),
         '',
@@ -543,7 +543,7 @@ async function sendToAdminTicket(fromStr, data) {
     if (!isHuman) {
         extra.reply_markup = {
             inline_keyboard: [
-                [{ text: '🙋‍♂️ Ambil Tiket', callback_data: `claim_${Date.now()}` }]
+                [{ text: '\uD83D\uDE4B\u200D\u2642\uFE0F Ambil Tiket', callback_data: `claim_${Date.now()}` }]
             ]
         };
     }
@@ -1161,7 +1161,7 @@ async function handleTelegramMessage(message) {
             await sendToAdminTicket(`${fromName} ${username}`.trim(), {
                 target: 'TG',
                 metaLines: [`TG_CHAT_ID: ${chatId}`, `From: ${fromName}`, `Type: TEXT`, `Mode: HUMAN`],
-                contentLines: [`ðŸ’¬ <b>Member:</b> ${message.text}`]
+                contentLines: [`\uD83D\uDCAC <b>Member:</b> ${message.text}`]
             });
             return;
         }
@@ -1181,8 +1181,8 @@ async function handleTelegramMessage(message) {
             target: 'TG',
             metaLines: [`TG_CHAT_ID: ${chatId}`, `From: ${fromName}`, `Type: TEXT`, `Mode: AI`],
             contentLines: [
-                `ðŸ’¬ <b>Member:</b> ${message.text}`,
-                `ðŸ¤– <b>Melody:</b> ${aiReply}`
+                `\uD83D\uDCAC <b>Member:</b> ${message.text}`,
+                `\uD83E\uDD16 <b>Melody:</b> ${aiReply}`
             ]
         });
         return;
@@ -1461,7 +1461,7 @@ app.post('/wa/incoming', upload.any(), async (req, res) => {
             await sendToAdminTicket(pushName, {
                 target: 'WA',
                 metaLines: [`WA_JID: ${waJid}`, `From: ${pushName}`, `Type: ${type}`, `Mode: HUMAN`],
-                contentLines: text ? [`ðŸ’¬ <b>Member:</b> ${text}`] : [`ðŸ“Ž <b>Type:</b> ${type}`],
+                contentLines: text ? [`\uD83D\uDCAC <b>Member:</b> ${text}`] : [`\uD83D\uDCCE <b>Type:</b> ${type}`],
                 media: files[0] ? { type: (type === 'IMAGE' ? 'photo' : 'document'), buffer: files[0].buffer, filename: files[0].originalname } : null
             });
             return;
@@ -1478,7 +1478,7 @@ app.post('/wa/incoming', upload.any(), async (req, res) => {
             // Kirim balasan AI ke member
             const bridgeRes = await callWABridgeSend({ jid: waJid, text: aiReply });
         if (!bridgeRes.ok) {
-            await tgSendText(ADMIN_GROUP_ID, `âš ï¸ <b>GAGAL KIRIM KE WA</b>\nMember: ${pushName}\nError: <code>${bridgeRes.error}</code>\nURL: <code>${WA_BRIDGE_URL}</code>`);
+            await tgSendText(ADMIN_GROUP_ID, `\u26A0\uFE0F <b>GAGAL KIRIM KE WA</b>\nMember: ${pushName}\nError: <code>${bridgeRes.error}</code>\nURL: <code>${WA_BRIDGE_URL}</code>`);
         }
 
             // Lapor ke Admin
@@ -1486,8 +1486,8 @@ app.post('/wa/incoming', upload.any(), async (req, res) => {
                 target: 'WA',
                 metaLines: [`WA_JID: ${waJid}`, `From: ${pushName}`, `Type: TEXT`, `Mode: AI`],
                 contentLines: [
-                    `ðŸ’¬ <b>Member:</b> ${text}`,
-                    `ðŸ¤– <b>Melody:</b> ${aiReply}`
+                    `\uD83D\uDCAC <b>Member:</b> ${text}`,
+                    `\uD83E\uDD16 <b>Melody:</b> ${aiReply}`
                 ]
             });
             return;
