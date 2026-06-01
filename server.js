@@ -672,8 +672,8 @@ async function handleTelegramMessage(message) {
                     `ðŸŽ <b>Promo Spesial Buat Kamu:</b> \n` +
                     `- Bonus New Member 100%\n` +
                     `- Garansi Kekalahan 100% Saldo Kembali\n\n` +
-                    `ðŸš€ <b>Link Login:</b> <a href="https://ICE3BETplay.com/">KLIK DI SINI</a>\n` +
-                    `ðŸ“ˆ <b>Link RTP:</b> <a href="https://cutt.ly/rtp-j88">CEK RTP GACOR</a>\n\n` +
+                    `ðŸš€ <b>Link Login:</b> <a href="https://cutt.ly/ice3bet-alternatif2">KLIK DI SINI</a>\n` +
+                    `ðŸ“ˆ <b>Link RTP:</b> <a href="https://cutt.ly/ice3rtp">CEK RTP GACOR</a>\n\n` +
                     `Semoga JP Paus di sini ya kak! ðŸ’°ðŸ’¸`;
                 await tgSendText(chatId, welcomeText);
                 console.log(`ðŸ‘‹ Sent Welcome to TG: ${name}`);
@@ -1034,7 +1034,7 @@ async function handleTelegramMessage(message) {
                 `ðŸ”¥ Game: <b>${selected.name}</b>\n` +
                 `ðŸ“ˆ RTP: <b>${selected.rtp}</b>\n` +
                 `ðŸ› ï¸ Pola: <code>${selected.pattern}</code>\n\n` +
-                `ðŸš€ Gas sekarang di: <a href="https://ICE3BETplay.com/">KLIK LOGIN</a>\n` +
+                `ðŸš€ Gas sekarang di: <a href="https://cutt.ly/ice3bet-alternatif2">KLIK LOGIN</a>\n` +
                 `Semoga JP Paus hari ini ya kak! ðŸ™ðŸ’°`;
             await tgSendText(chatId, gacorText);
             return;
@@ -1445,7 +1445,7 @@ async function sendGacorUpdate() {
         `ðŸ”¥ Game: <b>${selected.name}</b>\n` +
         `ðŸ“ˆ RTP: <b>${selected.rtp}</b>\n` +
         `ðŸ› ï¸ Pola: <code>${selected.pattern}</code>\n\n` +
-        `ðŸš€ Gas sekarang di: <a href="https://ICE3BETplay.com/">KLIK LOGIN</a>\n` +
+        `ðŸš€ Gas sekarang di: <a href="https://cutt.ly/ice3bet-alternatif2">KLIK LOGIN</a>\n` +
         `Semoga JP Paus hari ini ya kak! ðŸ™ðŸ’°`;
 
     const res = await tgSendText(tgConfig.playerGroupId, gacorText);
