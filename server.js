@@ -655,6 +655,24 @@ app.post('/webhook', async (req, res) => {
     }
 });
 
+async function isGroupAdmin(chatId, userId) {
+    if (!chatId || !userId) return false;
+    // Admin group atau Log group di env selalu dianggap admin
+    if (String(chatId).trim() === String(ADMIN_GROUP_ID).trim() || String(chatId).trim() === String(LOG_GROUP_ID).trim()) {
+        return true;
+    }
+    try {
+        const res = await tgCall('getChatMember', { chat_id: chatId, user_id: userId });
+        if (res && res.ok && res.result) {
+            const status = res.result.status;
+            return status === 'administrator' || status === 'creator';
+        }
+    } catch (e) {
+        console.error('Error checking chat member status:', e);
+    }
+    return false;
+}
+
 async function handleTelegramMessage(message) {
     const chatId = message.chat?.id;
     const chatType = message.chat?.type;
@@ -1034,24 +1052,23 @@ async function handleTelegramMessage(message) {
         }
 
         // kalau admin reply tapi targetId tidak ketemu
-        await tgSendText(ADMIN_GROUP_ID, 'âš ï¸ Reply ini tidak punya meta WA_JID/TG_CHAT_ID. Pastikan reply pesan tiket yang ada metadata.');
+        await tgSendText(ADMIN_GROUP_ID, '\u26A0\uFE0F  Reply ini tidak punya meta WA_JID/TG_CHAT_ID. Pastikan reply pesan tiket yang ada metadata.');
         return;
     }
 
-    // 1.3) Admin sends message without reply â€” show hint
+    // 1.3) Admin sends message without reply — show hint
     if (IS_ADMIN && !message.reply_to_message && !cmd && text) {
-        await tgSendText(chatId, `ðŸ’¡ <b>Tip:</b> Untuk membalas member, <b>reply (geser kanan)</b> pesan tiket yang ada metadata WA_JID/TG_CHAT_ID.\n\nKetik /help untuk daftar perintah.`);
+        await tgSendText(chatId, `\uD83D\uDCA1 <b>Tip:</b> Untuk membalas member, <b>reply (geser kanan)</b> pesan tiket yang ada metadata WA_JID/TG_CHAT_ID.\n\nKetik /help untuk daftar perintah.`);
         return;
     }
 
     // 1.5) Player Group Logic (Telegram Group)
     if (chatType === 'group' || chatType === 'supergroup') {
-        // ... (sisanya tetap)
         // Handle Commands
         if (cmd === '/setgrup' || cmd === '/setgroup') {
             tgConfig.playerGroupId = chatId;
             saveJSON(TG_CONFIG_FILE, tgConfig);
-            await tgSendText(chatId, 'âœ… <b>Melody Aktif!</b> Grup Telegram ini sekarang terdaftar sebagai Grup Player ICE3BET. Melody akan menjaga grup ini tetap seru!');
+            await tgSendText(chatId, '\u2705 <b>Melody Aktif!</b> Grup Telegram ini sekarang terdaftar sebagai Grup Player ICE3BET. Melody akan menjaga grup ini tetap seru!');
             return;
         }
 
@@ -1063,33 +1080,37 @@ async function handleTelegramMessage(message) {
                 { name: 'Sugar Rush', rtp: '95%', pattern: '30x Auto, 30x Quick' }
             ];
             const selected = games[Math.floor(Math.random() * games.length)];
-            const gacorText = `ðŸŽ° <b>INFO BOCORAN GACOR ICE3BET</b> ðŸŽ°\n\n` +
-                `ðŸ”¥ Game: <b>${selected.name}</b>\n` +
-                `ðŸ“ˆ RTP: <b>${selected.rtp}</b>\n` +
-                `ðŸ› ï¸ Pola: <code>${selected.pattern}</code>\n\n` +
-                `ðŸš€ Gas sekarang di: <a href="https://cutt.ly/ice3bet-alternatif2">KLIK LOGIN</a>\n` +
-                `Semoga JP Paus hari ini ya kak! ðŸ™ðŸ’°`;
+            const gacorText = `\uD83C\uDFB0 <b>INFO BOCORAN GACOR ICE3BET</b> \uD83C\uDFB0\n\n` +
+                `\uD83D\uDD25 Game: <b>${selected.name}</b>\n` +
+                `\uD83D\uDCC8 RTP: <b>${selected.rtp}</b>\n` +
+                `\uD83D\uDEE0\uFE0F Pola: <code>${selected.pattern}</code>\n\n` +
+                `\uD83D\uDE80 Gas sekarang di: <a href="https://cutt.ly/ice3bet-alternatif2">KLIK LOGIN</a>\n` +
+                `Semoga JP Paus hari ini ya kak! \uD83D\uDE4F\uD83D\uDCB0`;
             await tgSendText(chatId, gacorText);
             return;
         }
 
         if (cmd === '/cekoki') {
-            const khodams = ['Kakek Zeus âš¡', 'Inces Starlight âœ¨', 'Panda Mahjong ðŸ¼', 'Permen Sugar Rush ðŸ¬', 'Kucing Lucky Neko ðŸ±'];
+            const khodams = ['Kakek Zeus \u26A1', 'Inces Starlight \u2728', 'Panda Mahjong \uD83D\uDC3C', 'Permen Sugar Rush \uD83C\uDF6C', 'Kucing Lucky Neko \uD83D\uDC31'];
             const khodam = khodams[Math.floor(Math.random() * khodams.length)];
-            await tgSendText(chatId, `ðŸ”® <b>RAMALAN GACOR Melody</b> ðŸ”®\n\nHari ini Kakak dijaga oleh Khodam: <b>${khodam}</b>\n\nMelody ramalkan kakak bakal JP Paus kalau main di provider Pragmatic jam sekarang! Gas tipis-tipis kak! ðŸš€ðŸŽ°`);
+            await tgSendText(chatId, `\uD83D\uDD2E <b>RAMALAN GACOR Melody</b> \uD83D\uDD2E\n\nHari ini Kakak dijaga oleh Khodam: <b>${khodam}</b>\n\nMelody ramalkan kakak bakal JP Paus kalau main di provider Pragmatic jam sekarang! Gas tipis-tipis kak! \uD83D\uDE80\uD83C\uDFB0`);
             return;
         }
 
         // --- ADMIN ASSISTANT (Trigger di semua chat grup) ---
         if (text.toLowerCase().includes('admin') || text.toLowerCase().includes('@admin')) {
-            await tgSendText(chatId, `Halo Kak! Ada yang bisa Melody bantu? Admin sedang sibuk memproses antrian depo/wd nih. ðŸ™‡â€â™€ï¸\n\nSambil nunggu, bisa cek info /gacor dulu ya kak! âœ¨`);
+            await tgSendText(chatId, `Halo Kak! Ada yang bisa Melody bantu? Admin sedang sibuk memproses antrian depo/wd nih. \uD83D\uDE47\u200D\u2640\uFE0F\n\nSambil nunggu, bisa cek info /gacor dulu ya kak! \u2728`);
         }
 
         // --- ANTI-SPAM LINK (Trigger di semua chat grup) ---
         if (!IS_ADMIN && !cmd && (text.toLowerCase().includes('http') || text.toLowerCase().includes('.com') || text.toLowerCase().includes('.net'))) {
-            if (!text.toLowerCase().includes('ICE3BET') && !text.toLowerCase().includes('cutt.ly')) {
-                // Karena Melody bukan admin, kita hanya beri teguran keras
-                await tgSendText(chatId, `âš ï¸ <b>PERINGATAN Melody</b> âš ï¸\n\nHalo Kak @${from.username || from.first_name}, dilarang sebar link selain ICE3BET di sini ya! (ChatID: ${chatId}) ðŸ¤«ðŸ‘Š`);
+            // Check if sender is group administrator
+            const isSenderAdmin = await isGroupAdmin(chatId, from.id);
+            if (!isSenderAdmin) {
+                if (!text.toLowerCase().includes('ice3bet') && !text.toLowerCase().includes('cutt.ly') && !text.toLowerCase().includes('ice3rtp')) {
+                    // Karena Melody adalah admin/anti-spam, kita beri teguran keras ke non-admin
+                    await tgSendText(chatId, `\u26A0\uFE0F <b>PERINGATAN Melody</b> \u26A0\uFE0F\n\nHalo Kak @${from.username || from.first_name}, dilarang sebar link selain ICE3BET di sini ya! (ChatID: ${chatId}) \uD83E\uDD2B\uD83D\uDC4A`);
+                }
             }
         }
 
