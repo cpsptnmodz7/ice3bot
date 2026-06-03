@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 // Global Logging
 app.use((req, res, next) => {
     if (req.url !== '/') {
-        console.log(`ðŸ“¡ [${new Date().toLocaleTimeString()}] ${req.method} ${req.url} from ${req.ip}`);
+        console.log(`\uD83D\uDCE1 [${new Date().toLocaleTimeString()}] ${req.method} ${req.url} from ${req.ip}`);
     }
     next();
 });
@@ -35,7 +35,7 @@ function loadJSON(filePath, defaultVal = {}) {
             return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
         }
     } catch (e) {
-        console.log(`âš ï¸ Failed to load ${filePath}:`, e.message);
+        console.log(`\u26A0\uFE0F Failed to load ${filePath}:`, e.message);
     }
     return defaultVal;
 }
@@ -44,7 +44,7 @@ function saveJSON(filePath, data) {
     try {
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
     } catch (e) {
-        console.log(`âŒ Failed to save ${filePath}:`, e.message);
+        console.log(`\u274C Failed to save ${filePath}:`, e.message);
     }
 }
 
@@ -63,7 +63,7 @@ const PORT = process.env.PORT || 10000;
 let WA_BRIDGE_URL = process.env.WA_BRIDGE_URL || '';
 const WA_BRIDGE_SECRET = process.env.WA_BRIDGE_SECRET || '';
 
-console.log(`ðŸ“¡ Initial WA Bridge URL: ${WA_BRIDGE_URL || 'NOT SET'}`);
+console.log(`\uD83D\uDCE1 Initial WA Bridge URL: ${WA_BRIDGE_URL || 'NOT SET'}`);
 
 // Config for TG Player Group
 const TG_CONFIG_FILE = path.join(DATA_DIR, 'tg_config.json');
@@ -83,7 +83,7 @@ let humanTakeovers = {}; // { jid: { adminId, adminName, startTime } }
 
 
 if (!TELEGRAM_BOT_TOKEN || !ADMIN_GROUP_ID || !LOG_GROUP_ID) {
-    console.error('âŒ Missing ENV: TELEGRAM_BOT_TOKEN, ADMIN_GROUP_ID, LOG_GROUP_ID');
+    console.error('\u274C Missing ENV: TELEGRAM_BOT_TOKEN, ADMIN_GROUP_ID, LOG_GROUP_ID');
     process.exit(1);
 }
 
@@ -124,11 +124,12 @@ async function getGeminiResponse(prompt, targetId = 'unknown', pushName = 'Kakak
         if (fs.existsSync(kPath)) knowledge = fs.readFileSync(kPath, 'utf-8');
     } catch (e) { }
 
-    const systemPrompt = `Kamu adalah Melody, CS ICE3BET yang sangat ramah, ceria, dan membantu. 
+    const systemPrompt = `Kamu adalah Melody, CS ICE3BET yang sangat ramah, asik, genit (playful) layaknya pacar, dan manja.
 Knowledge Base: ${knowledge}
 
-TUGAS: Jawab member dengan natural. Jika member tanya depo/wd/link/rtp, arahkan sesuai knowledge. Jika member marah, tenangkan. 
-Gunakan bahasa yang gaul dan sopan (Kak, Bosku, Abangku).
+TUGAS: Jawab member dengan natural. Jika member tanya depo/wd/link/rtp, arahkan sesuai knowledge. Jika member marah, rayu dan tenangkan dengan manja. 
+Sering-sering gunakan kata manis seperti "Melody kangen nih" atau "Semangat terus kak!", serta panggil mereka "Kakak", "Bosku", atau "Abangku".
+Gunakan bahasa yang gaul, suportif, dan banyak emoji lucu seperti 😊, 🥰, 😘, 🚀, atau 🎰.
 
 ATURAN FORMAT PENTING:
 - JANGAN PERNAH gunakan format markdown link seperti [text](url). Tulis URL langsung saja tanpa format apapun.
@@ -236,7 +237,7 @@ const DASHBOARD_HTML = `
 <body>
     <div id="login-overlay">
         <div class="login-box">
-            <h2>ðŸ” Dashboard Login</h2>
+            <h2>\uD83D\uDD10 Dashboard Login</h2>
             <p style="color: var(--muted)">Masukkan password dashboard kamu</p>
             <input type="password" id="pw" placeholder="Password">
             <button onclick="login()">Buka Dashboard</button>
@@ -246,17 +247,17 @@ const DASHBOARD_HTML = `
     <aside>
         <h1>Melody CRM</h1>
         <nav>
-            <a href="#" class="active">ðŸ  Dashboard</a>
-            <a href="#">ðŸ‘¥ Member WA</a>
-            <a href="#">ðŸ¤– Member TG</a>
-            <a href="#">ðŸ’° Riwayat Depo</a>
+            <a href="#" class="active">\uD83C\uDFE0 Dashboard</a>
+            <a href="#">\uD83D\uDC65 Member WA</a>
+            <a href="#">\uD83E\uDD16 Member TG</a>
+            <a href="#">\uD83D\uDCB0 Riwayat Depo</a>
         </nav>
     </aside>
 
     <main>
         <div class="header">
             <div>
-                <h2 style="margin:0">ðŸ‘‹ Halo Admin</h2>
+                <h2 style="margin:0">\uD83D\uDC4B Halo Admin</h2>
                 <p style="color: var(--muted); margin:0">Selamat datang di pusat kendali Melody</p>
             </div>
             <div id="sync-info" style="font-size: 0.8rem; color: var(--muted)">Sync: -</div>
@@ -339,7 +340,7 @@ async function tgCall(method, data, opts = {}) {
         const res = await axios.post(url, data, { timeout: 30000, ...opts });
         return res.data;
     } catch (e) {
-        console.error(`âŒ tgCall ${method} failed:`, e.response?.data || e.message);
+        console.error(`\u274C tgCall ${method} failed:`, e.response?.data || e.message);
         return null;
     }
 }
@@ -391,7 +392,7 @@ async function tgSendPhoto(chatId, buffer, filename, caption, extra = {}) {
         });
         return res.data;
     } catch (e) {
-        console.error('âŒ tgSendPhoto failed', e.response?.data || e.message);
+        console.error('\u274C tgSendPhoto failed', e.response?.data || e.message);
         return null;
     }
 }
@@ -410,7 +411,7 @@ async function tgSendDocument(chatId, buffer, filename, caption, extra = {}) {
         });
         return res.data;
     } catch (e) {
-        console.error('âŒ tgSendDocument failed', e.response?.data || e.message);
+        console.error('\u274C tgSendDocument failed', e.response?.data || e.message);
         return null;
     }
 }
@@ -428,7 +429,7 @@ async function tgSendVoice(chatId, buffer, filename, caption) {
         });
         return res.data;
     } catch (e) {
-        console.error('âŒ tgSendVoice failed', e.response?.data || e.message);
+        console.error('\u274C tgSendVoice failed', e.response?.data || e.message);
         return null;
     }
 }
@@ -467,7 +468,7 @@ async function elevenTTS(text) {
         );
         return Buffer.from(res.data);
     } catch (e) {
-        console.error('âŒ Eleven TTS failed', e.response?.data || e.message);
+        console.error('\u274C Eleven TTS failed', e.response?.data || e.message);
         return null;
     }
 }
@@ -492,7 +493,7 @@ async function elevenSTTFromOgg(oggBuffer) {
         const text = res.data?.text || res.data?.transcript;
         return text ? String(text).trim() : null;
     } catch (e) {
-        console.error('âŒ Eleven STT failed', e.response?.data || e.message);
+        console.error('\u274C Eleven STT failed', e.response?.data || e.message);
         return null;
     }
 }
@@ -572,13 +573,13 @@ async function callWABridgeAPI(path, data = {}, method = 'POST') {
         };
         if (method === 'POST') config.data = data;
 
-        console.log(`ðŸ“¡ Calling WA Bridge: ${method} ${config.url}`);
+        console.log(`\uD83D\uDCE1 Calling WA Bridge: ${method} ${config.url}`);
         const res = await axios(config);
-        console.log(`âœ… WA Bridge Response: OK`);
+        console.log(`\u2705 WA Bridge Response: OK`);
         return res.data || { ok: true };
     } catch (e) {
-        console.log(`âŒ WA Bridge Error: ${e.message} | URL: ${WA_BRIDGE_URL}${path}`);
-        if (e.response) console.log(`âŒ Error Data:`, JSON.stringify(e.response.data));
+        console.log(`\u274C WA Bridge Error: ${e.message} | URL: ${WA_BRIDGE_URL}${path}`);
+        if (e.response) console.log(`\u274C Error Data:`, JSON.stringify(e.response.data));
         return { ok: false, error: e.response?.data?.error || e.message };
     }
 }
@@ -594,7 +595,7 @@ app.post('/webhook', async (req, res) => {
     // telegram webhook
     res.send('ok');
 
-    console.log(`ðŸ“© Webhook received: ${JSON.stringify(req.body).substring(0, 200)}...`);
+    console.log(`\uD83D\uDCE9 Webhook received: ${JSON.stringify(req.body).substring(0, 200)}...`);
 
     if (req.body.message) {
         await handleTelegramMessage(req.body.message);
@@ -615,19 +616,19 @@ app.post('/webhook', async (req, res) => {
                     adminName: adminName,
                     startTime: Date.now()
                 };
-                console.log(`ðŸ‘¤ Human Takeover ACTIVATED for: ${targetId} by ${adminName}`);
+                console.log(`\uD83D\uDC64 Human Takeover ACTIVATED for: ${targetId} by ${adminName}`);
 
                 // Beri tahu member (Opsional)
                 if (targetId.includes('@')) { // WA
-                    await callWABridgeSend({ jid: targetId, text: `ðŸ™‹â€â™‚ï¸ *Pesan kakak sedang dibantu oleh Admin ${adminName}.* Mohon ditunggu sebentar ya kak! âœ¨` });
+                    await callWABridgeSend({ jid: targetId, text: `\uD83D\uDE4B\u200D\u2642\uFE0F\uFE0F *Pesan kakak sedang dibantu oleh Admin ${adminName}.* Mohon ditunggu sebentar ya kak! \u2728` });
                 } else { // TG
-                    await tgSendText(targetId, `ðŸ™‹â€â™‚ï¸ <b>Pesan kakak sedang dibantu oleh Admin ${adminName}.</b> Mohon ditunggu sebentar ya kak! âœ¨`);
+                    await tgSendText(targetId, `\uD83D\uDE4B\u200D\u2642\uFE0F\uFE0F <b>Pesan kakak sedang dibantu oleh Admin ${adminName}.</b> Mohon ditunggu sebentar ya kak! \u2728`);
                 }
             } else {
-                console.log('âš ï¸ Failed to extract targetId from ticket:', originalText);
+                console.log('\u26A0\uFE0F Failed to extract targetId from ticket:', originalText);
             }
 
-            const newText = originalText + `\n\nâœ… <b>Sedang dilayani oleh:</b> ${adminName} (AI OFF)`;
+            const newText = originalText + `\n\n\u2705 <b>Sedang dilayani oleh:</b> ${adminName} (AI OFF)`;
 
             if (cq.message.photo || cq.message.document) {
                 await tgCall('editMessageCaption', {
@@ -677,7 +678,7 @@ async function handleTelegramMessage(message) {
     const chatId = message.chat?.id;
     const chatType = message.chat?.type;
 
-    console.log(`ðŸ“¥ Processing message from chatId: ${chatId}`);
+    console.log(`\uD83D\uDCE5 Processing message from chatId: ${chatId}`);
 
     // 1.2) Handle Group Welcome
     if (message.new_chat_members) {
@@ -687,7 +688,7 @@ async function handleTelegramMessage(message) {
                 const name = newMember.first_name || 'Kakak';
                 const welcomeText = `\uD83C\uDF89 <b>WELCOME TO ICE3BET GAMING!</b> \uD83C\uDF89\n\n` +
                     `Halo Kak <b>${name}</b>! Selamat datang di grup resmi ICE3BET! \uD83E\uDD73\u2728\n` +
-                    `Senang banget bisa ketemu Kakak di sini. Melody siap nemenin dan bantuin Kakak 24 jam nonstop biar mainnya makin asik! \uD83D\uDE0E\n\n` +
+                    `Melody kangen banget nih sama Kakak! 🥰 Melody siap nemenin dan bantuin Kakak 24 jam nonstop biar mainnya makin asik dan auto JP Paus! \uD83D\uDE0E\n\n` +
                     `Di grup ini, Kakak bebas berbagi pola permainan, info bocoran slot gacor, diskusi game, hingga info promo terbaru yang pastinya melimpah ruah! \uD83C\uDF81\uD83D\uDCB0\n\n` +
                     `\u26A0\uFE0F <b>PEMBERITAHUAN PENTING:</b>\n` +
                     `Waspada terhadap modus penipuan oleh oknum yang mengatasnamakan Admin ICE3BET. Selalu bertransaksi melalui situs resmi ya kak! Ketik <b>adminlist</b> untuk melihat daftar admin resmi grup ini.\n\n` +
@@ -708,7 +709,7 @@ async function handleTelegramMessage(message) {
                 };
 
                 await tgSendText(chatId, welcomeText, extra);
-                console.log(`ðŸ‘‹ Sent Welcome to TG: ${name}`);
+                console.log(`\uD83D\uDC4B Sent Welcome to TG: ${name}`);
             }
         }
         return; // Selesai jika ini hanya update member baru
@@ -742,13 +743,13 @@ async function handleTelegramMessage(message) {
 
     // ===== GLOBAL COMMANDS (Anywhere) =====
     if (cmd === '/id') {
-        return tgSendText(chatId, `ðŸ†” <b>Informasi Chat</b>\n\nChat ID: <code>${chatId}</code>\nType: <b>${chatType}</b>\n\nADMIN_GROUP_ID di server: <code>${process.env.ADMIN_GROUP_ID}</code>`);
+        return tgSendText(chatId, `\uD83C\uDD94 <b>Informasi Chat</b>\n\nChat ID: <code>${chatId}</code>\nType: <b>${chatType}</b>\n\nADMIN_GROUP_ID di server: <code>${process.env.ADMIN_GROUP_ID}</code>`);
     }
 
     if (cmd === '/debug') {
         const maskedToken = TELEGRAM_BOT_TOKEN ? `${TELEGRAM_BOT_TOKEN.substring(0, 5)}...${TELEGRAM_BOT_TOKEN.substring(TELEGRAM_BOT_TOKEN.length - 5)}` : 'MISSING';
         return tgSendText(chatId,
-            `ðŸ› ï¸ <b>Debug Info:</b>\n\n` +
+            `\uD83D\uDEE0\uFE0F <b>Debug Info:</b>\n\n` +
             `Token: <code>${maskedToken}</code>\n` +
             `Admin ID: <code>${ADMIN_GROUP_ID}</code>\n` +
             `Log ID: <code>${LOG_GROUP_ID}</code>\n` +
@@ -762,12 +763,12 @@ async function handleTelegramMessage(message) {
 
     if (cmd && IS_ADMIN) {
         if (cmd === '/ping') {
-            return tgSendText(chatId, `ðŸ “ <b>PONG!</b> Melody aktif kak!\n\nSesi WA: ${waActiveSessions}\nKontak TG: ${Object.keys(tgContacts).length}`);
+            return tgSendText(chatId, `\uD83C\uDFD3 <b>PONG!</b> Melody aktif kak!\n\nSesi WA: ${waActiveSessions}\nKontak TG: ${Object.keys(tgContacts).length}`);
         }
 
         if (cmd === '/bcgroup' || cmd === '/bcgrup') {
             if (!tgConfig.playerGroupId) {
-                return tgSendText(chatId, '⚠️ <b>Grup Pemain belum terdaftar!</b>\nSilakan gunakan perintah <code>/setgrup</code> terlebih dahulu di dalam grup pemain.');
+                return tgSendText(chatId, '\u26A0\uFE0F <b>Grup Pemain belum terdaftar!</b>\nSilakan gunakan perintah <code>/setgrup</code> terlebih dahulu di dalam grup pemain.');
             }
 
             // Jika admin mereply sebuah pesan (teks/media/stiker/dll)
@@ -778,22 +779,98 @@ async function handleTelegramMessage(message) {
                     message_id: message.reply_to_message.message_id
                 });
                 if (res) {
-                    return tgSendText(chatId, '✅ <b>Broadcast Berhasil!</b> Pesan telah disalin ke grup pemain.');
+                    return tgSendText(chatId, '\u2705 <b>Broadcast Berhasil!</b> Pesan telah disalin ke grup pemain.');
                 } else {
-                    return tgSendText(chatId, '❌ <b>Broadcast Gagal!</b> Terjadi kesalahan saat menyalin pesan.');
+                    return tgSendText(chatId, '\u274C <b>Broadcast Gagal!</b> Terjadi kesalahan saat menyalin pesan.');
                 }
             }
 
-            // Jika mengirim teks biasa setelah command
-            if (!args) {
-                return tgSendText(chatId, '⚠️ <b>Format Salah!</b>\nGunakan: <code>/bcgroup [pesan]</code> atau reply pesan apa saja dengan ketik <code>/bcgroup</code>.');
+            // Helper: Parse inline buttons dari teks
+            // Format: teks caption\n---\n[Label|url] [Label2|url2]\n[Label3|url3]
+            function parseInlineButtons(rawText) {
+                if (!rawText || !rawText.includes('---')) {
+                    return { caption: rawText || '', reply_markup: null };
+                }
+                const parts = rawText.split('---');
+                const caption = parts[0].trim();
+                const buttonBlock = parts.slice(1).join('---').trim();
+
+                if (!buttonBlock) return { caption, reply_markup: null };
+
+                const rows = buttonBlock.split('\n').filter(l => l.trim());
+                const keyboard = [];
+
+                for (const row of rows) {
+                    const btnMatches = [...row.matchAll(/\[([^\]]+)\|([^\]]+)\]/g)];
+                    if (btnMatches.length > 0) {
+                        const rowBtns = btnMatches.map(m => ({
+                            text: m[1].trim(),
+                            url: m[2].trim()
+                        }));
+                        keyboard.push(rowBtns);
+                    }
+                }
+
+                if (keyboard.length === 0) return { caption, reply_markup: null };
+
+                return {
+                    caption,
+                    reply_markup: JSON.stringify({ inline_keyboard: keyboard })
+                };
             }
 
-            const res = await tgSendText(tgConfig.playerGroupId, args);
+            // Jika admin mengirim media (foto/video/dokumen/animasi) dengan caption /bcgroup [teks]
+            const hasPhoto = message.photo && message.photo.length;
+            const hasVideo = message.video;
+            const hasDocument = message.document;
+            const hasAnimation = message.animation;
+
+            if (hasPhoto || hasVideo || hasDocument || hasAnimation) {
+                const { caption, reply_markup } = parseInlineButtons(args);
+                let payload = {
+                    chat_id: tgConfig.playerGroupId,
+                    caption: caption,
+                    parse_mode: 'HTML'
+                };
+                if (reply_markup) payload.reply_markup = reply_markup;
+
+                let res = null;
+                if (hasPhoto) {
+                    const bestPhoto = message.photo[message.photo.length - 1];
+                    payload.photo = bestPhoto.file_id;
+                    res = await tgCall('sendPhoto', payload);
+                } else if (hasAnimation) {
+                    payload.animation = message.animation.file_id;
+                    res = await tgCall('sendAnimation', payload);
+                } else if (hasVideo) {
+                    payload.video = message.video.file_id;
+                    res = await tgCall('sendVideo', payload);
+                } else if (hasDocument) {
+                    payload.document = message.document.file_id;
+                    res = await tgCall('sendDocument', payload);
+                }
+
+                if (res) {
+                    return tgSendText(chatId, '\u2705 <b>Broadcast Berhasil!</b> Media + teks telah dikirim ke grup pemain.');
+                } else {
+                    return tgSendText(chatId, '\u274C <b>Broadcast Gagal!</b> Terjadi kesalahan saat mengirim media.');
+                }
+            }
+
+            // Jika mengirim teks biasa setelah command (tanpa media)
+            if (!args) {
+                return tgSendText(chatId, '\u26A0\uFE0F <b>Format Broadcast:</b>\n\n\u2022 <b>Teks saja:</b>\n<code>/bcgroup [pesan]</code>\n\n\u2022 <b>Media + teks:</b>\nKirim foto/video, caption:\n<code>/bcgroup [pesan]</code>\n\n\u2022 <b>Media + teks + tombol link:</b>\nKirim foto/video, caption:\n<code>/bcgroup [pesan]\n---\n[Tombol1|url1] [Tombol2|url2]\n[Tombol3|url3]</code>\n\n\u2022 <b>Reply forward:</b>\nReply pesan lalu ketik <code>/bcgroup</code>');
+            }
+
+            // Teks biasa, bisa dengan tombol link
+            const { caption: textContent, reply_markup } = parseInlineButtons(args);
+            const extra = {};
+            if (reply_markup) extra.reply_markup = reply_markup;
+            const res = await tgSendText(tgConfig.playerGroupId, textContent, extra);
             if (res) {
-                return tgSendText(chatId, '✅ <b>Broadcast Berhasil!</b> Pesan teks telah dikirim ke grup pemain.');
+                return tgSendText(chatId, '\u2705 <b>Broadcast Berhasil!</b> Pesan telah dikirim ke grup pemain.');
             } else {
-                return tgSendText(chatId, '❌ <b>Broadcast Gagal!</b> Terjadi kesalahan saat mengirim pesan teks.');
+                return tgSendText(chatId, '\u274C <b>Broadcast Gagal!</b> Terjadi kesalahan saat mengirim pesan.');
             }
         }
 
@@ -801,7 +878,7 @@ async function handleTelegramMessage(message) {
             if (!args) return tgSendText(chatId, 'Usage: /broadcast [text]');
             await tgSendText(chatId, 'â ³ Starting broadcast to all contacts...');
             const r = await callWABridgeAPI('/broadcast', { text: args }, 'POST');
-            if (!r.ok) return tgSendText(chatId, `âŒ Failed: ${r.error}`);
+            if (!r.ok) return tgSendText(chatId, `\u274C Failed: ${r.error}`);
             return;
         }
 
@@ -809,9 +886,9 @@ async function handleTelegramMessage(message) {
             if (!args) return tgSendText(chatId, 'Usage: /broadcast_tg [text]');
 
             const tgJids = Object.keys(tgContacts);
-            if (tgJids.length === 0) return tgSendText(chatId, 'âŒ Belum ada pengguna Telegram yang tersimpan di database.');
+            if (tgJids.length === 0) return tgSendText(chatId, '\u274C Belum ada pengguna Telegram yang tersimpan di database.');
 
-            await tgSendText(chatId, `â³ Starting broadcast to ${tgJids.length} Telegram users...`);
+            await tgSendText(chatId, `\u23F3 Starting broadcast to ${tgJids.length} Telegram users...`);
 
             // Run async to not block
             (async () => {
@@ -825,7 +902,7 @@ async function handleTelegramMessage(message) {
                     await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1500));
                 }
 
-                await tgSendText(chatId, `ðŸ“¢ <b>TG BROADCAST COMPLETE</b>\nâœ… Sent: ${sent}\nâŒ Failed: ${failed}\nðŸ“Š Total: ${tgJids.length}`);
+                await tgSendText(chatId, `\uD83D\uDCE2 <b>TG BROADCAST COMPLETE</b>\n\u2705 Sent: ${sent}\n\u274C Failed: ${failed}\n\uD83D\uDCCA Total: ${tgJids.length}`);
             })();
             return;
         }
@@ -835,9 +912,9 @@ async function handleTelegramMessage(message) {
             const jids = parts[1];
             const msg = parts.slice(2).join(' ');
             if (!jids || !msg) return tgSendText(chatId, 'Usage: /broadcast_wa [jid1,jid2] [text]');
-            await tgSendText(chatId, `â³ Starting targeted broadcast...`);
+            await tgSendText(chatId, `\u23F3 Starting targeted broadcast...`);
             const r = await callWABridgeAPI('/broadcast', { text: msg, targets: jids.split(',') }, 'POST');
-            if (!r.ok) return tgSendText(chatId, `âŒ Failed: ${r.error}`);
+            if (!r.ok) return tgSendText(chatId, `\u274C Failed: ${r.error}`);
             return;
         }
 
@@ -855,11 +932,11 @@ async function handleTelegramMessage(message) {
             const lat = parseFloat(latStr);
             const lon = parseFloat(lonStr);
 
-            if (isNaN(lat) || isNaN(lon)) return tgSendText(chatId, 'âŒ Format lokasi salah. Gunakan titik (.), contoh: -6.2,106.8');
+            if (isNaN(lat) || isNaN(lon)) return tgSendText(chatId, '\u274C Format lokasi salah. Gunakan titik (.), contoh: -6.2,106.8');
 
-            await tgSendText(chatId, `â³ Starting location-based broadcast (Radius: ${radius}km)...`);
+            await tgSendText(chatId, `\u23F3 Starting location-based broadcast (Radius: ${radius}km)...`);
             const r = await callWABridgeAPI('/broadcast', { text: msg, lat, lon, radius }, 'POST');
-            if (!r.ok) return tgSendText(chatId, `âŒ Failed: ${r.error}`);
+            if (!r.ok) return tgSendText(chatId, `\u274C Failed: ${r.error}`);
             return;
         }
 
@@ -876,14 +953,14 @@ async function handleTelegramMessage(message) {
             const lat = parseFloat(latStr);
             const lon = parseFloat(lonStr);
 
-            if (isNaN(lat) || isNaN(lon)) return tgSendText(chatId, 'âŒ Format lokasi salah. Gunakan titik (.), contoh: -6.2,106.8');
+            if (isNaN(lat) || isNaN(lon)) return tgSendText(chatId, '\u274C Format lokasi salah. Gunakan titik (.), contoh: -6.2,106.8');
 
             const r = await callWABridgeAPI('/contact/loc', { jid, lat, lon }, 'POST');
-            return tgSendText(chatId, r.ok ? `âœ… ${r.message}` : `âŒ Failed: ${r.error}`);
+            return tgSendText(chatId, r.ok ? `\u2705 ${r.message}` : `\u274C Failed: ${r.error}`);
         }
 
         if (cmd === '/export_data') {
-            await tgSendText(chatId, 'â³ Meng-export data kontak WA & Telegram...');
+            await tgSendText(chatId, '\u23F3 Meng-export data kontak WA & Telegram...');
 
             const r = await callWABridgeAPI('/contacts', {}, 'GET');
             const waContacts = r.contacts || [];
@@ -902,7 +979,7 @@ async function handleTelegramMessage(message) {
             const d = new Date();
             const dateStr = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 
-            await tgSendDocument(chatId, buffer, `Export_Kontak_${dateStr}.csv`, 'âœ… Ini data kontak WhatsApp dan Telegram kamu (bisa dibuka di Excel).');
+            await tgSendDocument(chatId, buffer, `Export_Kontak_${dateStr}.csv`, '\u2705 Ini data kontak WhatsApp dan Telegram kamu (bisa dibuka di Excel).');
             return;
         }
 
@@ -912,14 +989,14 @@ async function handleTelegramMessage(message) {
             const msg = parts.slice(2).join(' ');
             if (!name || !msg) return tgSendText(chatId, 'Usage: /template_add [name] [text]');
             const r = await callWABridgeAPI('/template', { action: 'add', name, text: msg }, 'POST');
-            return tgSendText(chatId, r.ok ? `âœ… ${r.message}` : `âŒ Failed: ${r.error}`);
+            return tgSendText(chatId, r.ok ? `\u2705 ${r.message}` : `\u274C Failed: ${r.error}`);
         }
 
         if (cmd === '/template_list') {
             const r = await callWABridgeAPI('/template', { action: 'list' }, 'POST');
-            if (!r.ok) return tgSendText(chatId, `âŒ Failed: ${r.error}`);
+            if (!r.ok) return tgSendText(chatId, `\u274C Failed: ${r.error}`);
             const list = (r.templates || []).map(t => `- <b>${t.name}</b>: ${t.text.substring(0, 30)}...`).join('\n');
-            return tgSendText(chatId, list ? `ðŸ“‹ <b>Templates:</b>\n${list}` : 'No templates.');
+            return tgSendText(chatId, list ? `\uD83D\uDCCB <b>Templates:</b>\n${list}` : 'No templates.');
         }
 
         if (cmd === '/template_del') {
@@ -927,7 +1004,7 @@ async function handleTelegramMessage(message) {
             const name = parts[1];
             if (!name) return tgSendText(chatId, 'Usage: /template_del [name]');
             const r = await callWABridgeAPI('/template', { action: 'del', name }, 'POST');
-            return tgSendText(chatId, r.ok ? `âœ… ${r.message}` : `âŒ Failed: ${r.error}`);
+            return tgSendText(chatId, r.ok ? `\u2705 ${r.message}` : `\u274C Failed: ${r.error}`);
         }
 
         if (cmd === '/schedule_add') {
@@ -936,14 +1013,14 @@ async function handleTelegramMessage(message) {
             const name = parts[2];
             if (!time || !name) return tgSendText(chatId, 'Usage: /schedule_add [HH:MM] [templateName]\nExample: /schedule_add 09:00 promo1');
             const r = await callWABridgeAPI('/schedule', { action: 'add', time, templateName: name }, 'POST');
-            return tgSendText(chatId, r.ok ? `âœ… ${r.message}` : `âŒ Failed: ${r.error}`);
+            return tgSendText(chatId, r.ok ? `\u2705 ${r.message}` : `\u274C Failed: ${r.error}`);
         }
 
         if (cmd === '/schedule_list') {
             const r = await callWABridgeAPI('/schedule', { action: 'list' }, 'POST');
-            if (!r.ok) return tgSendText(chatId, `âŒ Failed: ${r.error}`);
+            if (!r.ok) return tgSendText(chatId, `\u274C Failed: ${r.error}`);
             const list = (r.schedules || []).map(s => `- [<code>${s.id}</code>] ${s.time} -> ${s.templateName} (${s.enabled ? 'ON' : 'OFF'})`).join('\n');
-            return tgSendText(chatId, list ? `â° <b>Schedules:</b>\n${list}` : 'No schedules.');
+            return tgSendText(chatId, list ? `\u23F0 <b>Schedules:</b>\n${list}` : 'No schedules.');
         }
 
         if (cmd === '/schedule_del') {
@@ -951,7 +1028,7 @@ async function handleTelegramMessage(message) {
             const id = parts[1];
             if (!id) return tgSendText(chatId, 'Usage: /schedule_del [id]');
             const r = await callWABridgeAPI('/schedule', { action: 'del', id }, 'POST');
-            return tgSendText(chatId, r.ok ? `âœ… ${r.message}` : `âŒ Failed: ${r.error}`);
+            return tgSendText(chatId, r.ok ? `\u2705 ${r.message}` : `\u274C Failed: ${r.error}`);
         }
 
         if (cmd === '/schedule_toggle') {
@@ -959,17 +1036,17 @@ async function handleTelegramMessage(message) {
             const id = parts[1];
             if (!id) return tgSendText(chatId, 'Usage: /schedule_toggle [id]');
             const r = await callWABridgeAPI('/schedule', { action: 'toggle', id }, 'POST');
-            return tgSendText(chatId, r.ok ? `âœ… Schedule ${id} is now ${r.enabled ? 'ON' : 'OFF'}` : `âŒ Failed: ${r.error}`);
+            return tgSendText(chatId, r.ok ? `\u2705 Schedule ${id} is now ${r.enabled ? 'ON' : 'OFF'}` : `\u274C Failed: ${r.error}`);
         }
 
         if (cmd === '/contacts_count') {
             const r = await callWABridgeAPI('/contacts', {}, 'GET');
-            return tgSendText(chatId, r.ok ? `ðŸ“Š Total WhatsApp contacts saved: ${r.count}` : `âŒ Failed: ${r.error}`);
+            return tgSendText(chatId, r.ok ? `\uD83D\uDCCA Total WhatsApp contacts saved: ${r.count}` : `\u274C Failed: ${r.error}`);
         }
 
         if (cmd === '/help') {
             return tgSendText(chatId,
-                `ðŸ¤– <b>Admin Commands:</b>\n\n` +
+                `\uD83E\uDD16 <b>Admin Commands:</b>\n\n` +
                 `<b>Broadcast:</b>\n` +
                 `/broadcast [text] (All WA)\n` +
                 `/broadcast_tg [text] (All TG)\n` +
@@ -1002,28 +1079,28 @@ async function handleTelegramMessage(message) {
             const targetId = args.trim();
             if (humanTakeovers[targetId]) {
                 delete humanTakeovers[targetId];
-                await tgSendText(chatId, `âœ… Human takeover untuk <code>${targetId}</code> selesai. AI Melody aktif kembali untuk member ini.`);
+                await tgSendText(chatId, `\u2705 Human takeover untuk <code>${targetId}</code> selesai. AI Melody aktif kembali untuk member ini.`);
                 // Notify member
                 if (targetId.includes('@')) {
-                    await callWABridgeSend({ jid: targetId, text: 'âœ… Terima kasih kak! Admin sudah selesai membantu. Melody kembali siap melayani kakak. ðŸ˜Š' });
+                    await callWABridgeSend({ jid: targetId, text: '\u2705 Terima kasih kak! Admin sudah selesai membantu. Melody kembali siap melayani kakak. \uD83D\uDE0A' });
                 } else {
-                    await tgSendText(targetId, 'âœ… Terima kasih kak! Admin sudah selesai membantu. Melody kembali siap melayani kakak. ðŸ˜Š');
+                    await tgSendText(targetId, '\u2705 Terima kasih kak! Admin sudah selesai membantu. Melody kembali siap melayani kakak. \uD83D\uDE0A');
                 }
             } else {
-                await tgSendText(chatId, `âš ï¸ Tidak ada takeover aktif untuk <code>${targetId}</code>`);
+                await tgSendText(chatId, `\u26A0\uFE0F Tidak ada takeover aktif untuk <code>${targetId}</code>`);
             }
             return;
         }
 
         if (cmd === '/set_bridge') {
-            if (!args) return tgSendText(chatId, 'âŒ Sertakan URL bridge. Contoh: <code>/set_bridge https://abc.ngrok-free.app</code>');
+            if (!args) return tgSendText(chatId, '\u274C Sertakan URL bridge. Contoh: <code>/set_bridge https://abc.ngrok-free.app</code>');
             WA_BRIDGE_URL = args.trim();
-            return tgSendText(chatId, `âœ… <b>WA_BRIDGE_URL diperbarui:</b>\n<code>${WA_BRIDGE_URL}</code>\n\n<i>Perubahan ini bersifat sementara sampai server restart/deploy ulang. Untuk permanen, update di Render Dashboard.</i>`);
+            return tgSendText(chatId, `\u2705 <b>WA_BRIDGE_URL diperbarui:</b>\n<code>${WA_BRIDGE_URL}</code>\n\n<i>Perubahan ini bersifat sementara sampai server restart/deploy ulang. Untuk permanen, update di Render Dashboard.</i>`);
         }
 
         // Unknown Command Catch for Admin
         if (cmd.startsWith('/')) {
-            return tgSendText(chatId, `â“ Perintah <b>${cmd}</b> tidak dikenal. Ketik /help untuk daftar perintah.`);
+            return tgSendText(chatId, `\u2753 Perintah <b>${cmd}</b> tidak dikenal. Ketik /help untuk daftar perintah.`);
         }
     }
 
@@ -1042,7 +1119,7 @@ async function handleTelegramMessage(message) {
             } else { // TG
                 await tgSendText(targetId, text);
             }
-            console.log(`ðŸ’¬ Admin ${fromName} replied to ${targetId}: ${text}`);
+            console.log(`\uD83D\uDCAC Admin ${fromName} replied to ${targetId}: ${text}`);
             return;
         }
 
@@ -1051,7 +1128,7 @@ async function handleTelegramMessage(message) {
             const mediaObj = await extractTelegramNonTextMedia(replyMsg);
 
             if (mediaObj.type === 'Unknown' || !mediaObj.buffer) {
-                await tgSendText(chatId, 'âŒ Pesan yang kamu reply bukan berupa Foto/Dokumen/Video yang valid.');
+                await tgSendText(chatId, '\u274C Pesan yang kamu reply bukan berupa Foto/Dokumen/Video yang valid.');
                 return;
             }
 
@@ -1059,9 +1136,9 @@ async function handleTelegramMessage(message) {
             const mediaType = mediaObj.sendType; // 'photo' or 'document'
             const mediaFilename = mediaObj.filename;
 
-            await tgSendText(chatId, `â³ Starting Media Broadcast to all WA contacts...`);
+            await tgSendText(chatId, `\u23F3 Starting Media Broadcast to all WA contacts...`);
             const r = await callWABridgeAPI('/broadcast', { text: args, mediaBase64, mediaType, mediaFilename }, 'POST');
-            if (!r.ok) await tgSendText(chatId, `âŒ Failed: ${r.error}`);
+            if (!r.ok) await tgSendText(chatId, `\u274C Failed: ${r.error}`);
             return;
         }
 
@@ -1192,7 +1269,7 @@ async function handleTelegramMessage(message) {
     if (message.voice) {
         const fileLink = await tgGetFileLink(message.voice.file_id);
         if (!fileLink) {
-            await tgSendText(chatId, 'âŒ Gagal baca voice. Coba ulang ya kak.');
+            await tgSendText(chatId, '\u274C Gagal baca voice. Coba ulang ya kak.');
             return;
         }
 
@@ -1202,7 +1279,7 @@ async function handleTelegramMessage(message) {
             .catch(() => null);
 
         if (!ogg) {
-            await tgSendText(chatId, 'âŒ Gagal download voice. Coba ulang ya kak.');
+            await tgSendText(chatId, '\u274C Gagal download voice. Coba ulang ya kak.');
             return;
         }
 
@@ -1222,7 +1299,7 @@ async function handleTelegramMessage(message) {
                 media: { type: 'document', buffer: ogg, filename: 'voice.ogg' }
             });
 
-            await tgSendText(chatId, 'âš ï¸ Voice note diterima, tapi STT belum bisa dibaca. Admin akan bantu ya kak ðŸ™');
+            await tgSendText(chatId, '\u26A0\uFE0F Voice note diterima, tapi STT belum bisa dibaca. Admin akan bantu ya kak \uD83D\uDE4F');
             return;
         }
 
@@ -1237,7 +1314,7 @@ async function handleTelegramMessage(message) {
                 if (voice) await tgSendVoice(chatId, voice, 'reply.ogg');
             }
 
-            await logToGroup('ðŸŽ™ï¸ TG VOICE TRIGGER', [
+            await logToGroup('\uD83C\uDFA4\uFE0F TG VOICE TRIGGER', [
                 `Time: ${nowISO()}`,
                 `Category: ${hit.category}`,
                 `From: ${fromName} ${username}`.trim(),
@@ -1283,7 +1360,7 @@ async function handleTelegramMessage(message) {
         media: media.buffer ? { type: media.sendType, buffer: media.buffer, filename: media.filename } : null
     });
 
-    await tgSendText(chatId, 'âœ… Pesan kamu sudah masuk ke admin ya kak. Admin akan bantu ðŸ™');
+    await tgSendText(chatId, '\u2705 Pesan kamu sudah masuk ke admin ya kak. Admin akan bantu \uD83D\uDE4F');
 }
 
 async function extractTelegramNonTextMedia(message) {
@@ -1336,7 +1413,7 @@ async function extractTelegramNonTextMedia(message) {
 
         return { type: 'Unknown' };
     } catch (err) {
-        console.error('âŒ extractTelegramNonTextMedia error:', err.message);
+        console.error('\u274C extractTelegramNonTextMedia error:', err.message);
         return { type: 'Unknown' };
     }
 }
@@ -1381,7 +1458,7 @@ app.post('/wa/register-bridge', (req, res) => {
     WA_BRIDGE_URL = newUrl.replace(/\/$/, '');
 
     if (oldUrl !== WA_BRIDGE_URL) {
-        console.log(`ðŸ”„ WA_BRIDGE_URL updated: ${oldUrl || 'EMPTY'} â†’ ${WA_BRIDGE_URL}`);
+        console.log(`\uD83D\uDD04 WA_BRIDGE_URL updated: ${oldUrl || 'EMPTY'} \u2192 ${WA_BRIDGE_URL}`);
     }
 
     res.json({ ok: true, bridgeUrl: WA_BRIDGE_URL });
@@ -1391,8 +1468,8 @@ app.post('/wa/register-bridge', (req, res) => {
 app.post('/wa/incoming', upload.any(), async (req, res) => {
     const { jid, pushName, text, type } = req.body;
     
-    console.log(`ðŸ“¥ Incoming WA: ${pushName} (${jid}) - ${text}`);
-    console.log(`ðŸ“¡ Current WA_BRIDGE_URL used for AI reply: ${WA_BRIDGE_URL || 'NOT SET'}`);
+    console.log(`\uD83D\uDCE5 Incoming WA: ${pushName} (${jid}) - ${text}`);
+    console.log(`\uD83D\uDCE1 Current WA_BRIDGE_URL used for AI reply: ${WA_BRIDGE_URL || 'NOT SET'}`);
     
     try {
         const secret = req.headers['x-bridge-secret'];
@@ -1410,12 +1487,12 @@ app.post('/wa/incoming', upload.any(), async (req, res) => {
         const text = safeStr(body.text);
         const type = safeStr(body.type); // TEXT/IMAGE/VIDEO/DOC/STICKER/LOCATION
 
-        // ðŸŽ™ï¸ Melody VOICE RESPONSE (Hanya untuk VN di Private Chat)
+        // \uD83C\uDFA4\uFE0F Melody VOICE RESPONSE (Hanya untuk VN di Private Chat)
         if (type === 'AUDIO' && !waJid.includes('@g.us')) {
             try {
                 const audioFile = files.find(f => f.fieldname === 'media');
                 if (audioFile) {
-                    console.log('ðŸŽ™ï¸ Melody Processing Voice Note...');
+                    console.log('\uD83C\uDFA4\uFE0F Melody Processing Voice Note...');
                     const sttText = await elevenSTTFromOgg(audioFile.buffer);
                     if (sttText) {
                         let aiReply = await getGeminiResponse(sttText, jid, pushName);
@@ -1440,13 +1517,13 @@ app.post('/wa/incoming', upload.any(), async (req, res) => {
                     }
                 }
             } catch (e) {
-                console.log('âŒ Melody Voice Error:', e.message);
+                console.log('\u274C Melody Voice Error:', e.message);
             }
         }
 
         const hit = matchTrigger(text);
 
-        await logToGroup('ðŸ“© WA INCOMING', [
+        await logToGroup('\uD83D\uDCE9 WA INCOMING', [
             `Time: ${nowISO()}`,
             `WA_JID: ${waJid}`,
             `From: ${pushName}`,
@@ -1512,7 +1589,7 @@ app.post('/wa/incoming', upload.any(), async (req, res) => {
         // reply WA dilakukan lewat bridge, bukan dari sini.
 
     } catch (e) {
-        console.error('âŒ /wa/incoming error', e);
+        console.error('\u274C /wa/incoming error', e);
         // Response sudah dikirim di atas, jadi cukup log saja
     }
 });
@@ -1530,18 +1607,18 @@ async function sendGacorUpdate() {
     ];
 
     const selected = games[Math.floor(Math.random() * games.length)];
-    const gacorText = `ðŸŽ° <b>INFO BOCORAN GACOR ICE3BET</b> ðŸŽ°\n\n` +
-        `ðŸ”¥ Game: <b>${selected.name}</b>\n` +
-        `ðŸ“ˆ RTP: <b>${selected.rtp}</b>\n` +
-        `ðŸ› ï¸ Pola: <code>${selected.pattern}</code>\n\n` +
-        `ðŸš€ Gas sekarang di: <a href="https://cutt.ly/ice3bet-alternatif2">KLIK LOGIN</a>\n` +
-        `Semoga JP Paus hari ini ya kak! ðŸ™ðŸ’°`;
+    const gacorText = `\uD83C\uDFB0 <b>INFO BOCORAN GACOR ICE3BET</b> \uD83C\uDFB0\n\n` +
+        `\uD83D\uDD25 Game: <b>${selected.name}</b>\n` +
+        `\uD83D\uDCC8 RTP: <b>${selected.rtp}</b>\n` +
+        `\uD83D\uDEE0\uFE0F Pola: <code>${selected.pattern}</code>\n\n` +
+        `\uD83D\uDE80 Gas sekarang di: <a href="https://cutt.ly/ice3bet-alternatif2">KLIK LOGIN</a>\n` +
+        `Semoga JP Paus hari ini ya kak! \uD83D\uDE4F\uD83D\uDCB0`;
 
     const res = await tgSendText(tgConfig.playerGroupId, gacorText);
     if (res) {
-        console.log(`ðŸ“¢ [${new Date().toLocaleTimeString()}] Sent Gacor Update to TG Group: ${tgConfig.playerGroupId}`);
+        console.log(`\uD83D\uDCE2 [${new Date().toLocaleTimeString()}] Sent Gacor Update to TG Group: ${tgConfig.playerGroupId}`);
     } else {
-        console.log(`âŒ [${new Date().toLocaleTimeString()}] FAILED to send Gacor Update to TG Group: ${tgConfig.playerGroupId}`);
+        console.log(`\u274C [${new Date().toLocaleTimeString()}] FAILED to send Gacor Update to TG Group: ${tgConfig.playerGroupId}`);
     }
 }
 
@@ -1550,33 +1627,33 @@ setTimeout(sendGacorUpdate, 5000); // Tunggu 5 detik setelah start
 setInterval(sendGacorUpdate, 3 * 60 * 60 * 1000);
 
 app.listen(PORT, async () => {
-    console.log(`âœ… Telegram Hub listening on ${PORT}`);
-    console.log(`ðŸŒ Ready: /webhook`);
+    console.log(`\u2705 Telegram Hub listening on ${PORT}`);
+    console.log(`\uD83C\uDF10 Ready: /webhook`);
 
     // Automated Webhook Setup & Debug
     const setupWebhook = async () => {
         try {
             // 1. Check current info
             const info = await axios.get(`${TG_API}/getWebhookInfo`);
-            console.log('ðŸ” Current Webhook Status:', JSON.stringify(info.data.result));
+            console.log('\uD83D\uDD0D Current Webhook Status:', JSON.stringify(info.data.result));
 
             // 2. Force update if RENDER_URL exists
             const currentUrl = process.env.RENDER_URL || 'https://ice3bot.onrender.com';
             const targetUrl = `${currentUrl.replace(/\/$/, '')}/webhook`;
 
-            console.log(`ðŸš€ Force setting webhook to: ${targetUrl}`);
+            console.log(`\uD83D\uDE80 Force setting webhook to: ${targetUrl}`);
             const r = await axios.post(`${TG_API}/setWebhook`, {
                 url: targetUrl,
                 drop_pending_updates: true,
                 allowed_updates: ['message', 'callback_query', 'chat_member', 'my_chat_member']
             });
-            console.log('âœ… Telegram SetWebhook Response:', JSON.stringify(r.data));
+            console.log('\u2705 Telegram SetWebhook Response:', JSON.stringify(r.data));
         } catch (e) {
-            console.log('âŒ Failed to setup webhook:', e.message);
-            if (e.response) console.log('âŒ Error Data:', JSON.stringify(e.response.data));
+            console.log('\u274C Failed to setup webhook:', e.message);
+            if (e.response) console.log('\u274C Error Data:', JSON.stringify(e.response.data));
         }
     };
 
-    await setupWebhook();
+    // await setupWebhook(); // Temporarily disabled for local polling
 });
 

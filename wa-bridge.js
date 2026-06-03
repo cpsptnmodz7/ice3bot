@@ -668,7 +668,7 @@ async function startWA() {
             if ((now - lastSeenTs > SEVEN_DAYS) && (fuCount < 3) && (now - lastFUTs > SEVEN_DAYS)) {
                 try {
                     const name = contact.name || 'Kak';
-                    const msg = `Halo kak ${name}! 👋\nMichelle kangen nih, sudah seminggu kakak tidak mampir. Ada kendala kah atau ada yang bisa Michelle bantu hari ini? 😊`;
+                    const msg = `Halo kak ${name}! 👋\nMelody kangen nih, sudah seminggu kakak tidak mampir. Ada kendala kah atau ada yang bisa Melody bantu hari ini? 😊`;
                     
                     console.log(`✉️ [SAFE MODE] Sending Follow-up to ${jid} (${sentInThisBatch + 1}/3)`);
                     await sock.sendMessage(jid, { text: msg });
@@ -737,7 +737,7 @@ async function startWA() {
         if (anu.action === 'add') {
             for (let num of anu.participants) {
                 const welcomeText = `🎉 *SELAMAT DATANG DI JEMPOL88!* 🎉\n\n` +
-                                    `Halo kak @${num.split('@')[0]}! Selamat bergabung di komunitas JEMPOL88. Michelle siap bantu kakak setiap hari. 😊\n\n` +
+                                    `Halo kak @${num.split('@')[0]}! Selamat bergabung di komunitas JEMPOL88. Melody siap bantu kakak setiap hari. 😊\n\n` +
                                     `🎁 *Promo Spesial Buat Kakak:* \n` +
                                     `- Bonus New Member 100%\n` +
                                     `- Garansi Kekalahan 100% Saldo Kembali\n\n` +
@@ -771,11 +771,11 @@ async function startWA() {
                 return (Date.now() - lastSeen.getTime()) < 24 * 60 * 60 * 1000;
             }).length;
 
-            const summaryText = `📊 <b>LAPORAN HARIAN MICHELLE</b>\n\n` +
+            const summaryText = `📊 <b>LAPORAN HARIAN MELODY</b>\n\n` +
                                 `👥 Total Member WA: <b>${totalMembers}</b>\n` +
                                 `🔥 Aktif 24 Jam Terakhir: <b>${activeToday}</b>\n` +
                                 `✅ Bot Status: <b>Online</b>\n\n` +
-                                `Semangat terus Bosku! Michelle siap kerja lagi besok. 🚀`;
+                                `Semangat terus Bosku! Melody siap kerja lagi besok. 🚀`;
             
             await tgSendMessage(ADMIN_GROUP_ID, summaryText);
             console.log('📊 Sent Daily Summary to Admin');
@@ -792,9 +792,9 @@ async function startWA() {
                 // Jika tidak aktif antara 24-25 jam (biar tidak spam berkali-kali)
                 if (diff > 24 * 60 * 60 * 1000 && diff < 25 * 60 * 60 * 1000) {
                     if (!c.lastDepositTime || (Date.now() - c.lastDepositTime) > 48 * 60 * 60 * 1000) {
-                        const nudge = `Halo kak ${c.name || ''}! Michelle kangen nih.. 😊\n\n` +
+                        const nudge = `Halo kak ${c.name || ''}! Melody kangen nih.. 😊\n\n` +
                                       `Cuma mau info kalau hari ini RTP di JEMPOL88 lagi *Gacor parah* loh! Link login masih sama ya kak: https://jempol88play.com/\n\n` +
-                                      `Michelle tunggu ya di dalam! 🎰🚀`;
+                                      `Melody tunggu ya di dalam! 🎰🚀`;
                         
                         try {
                             await sock.sendMessage(jid, { text: nudge });
@@ -830,7 +830,7 @@ async function startWA() {
                 if (cmd === '!setgrup' || cmd === '!setgroup') {
                     config.playerGroupId = jid;
                     saveConfig();
-                    await sock.sendMessage(jid, { text: '✅ *Michelle Aktif!* Grup ini sekarang terdaftar sebagai Grup Player JEMPOL88. Michelle akan menjaga grup ini tetap seru!' });
+                    await sock.sendMessage(jid, { text: '✅ *Melody Aktif!* Grup ini sekarang terdaftar sebagai Grup Player JEMPOL88. Melody akan menjaga grup ini tetap seru!' });
                 } else if (cmd === '!gacor' || cmd === '!testgacor') {
                     const games = [
                         { name: 'Gates of Olympus (Zeus)', rtp: '98%', pattern: '10x Manual, 30x Quick, 50x Turbo' },
@@ -849,18 +849,18 @@ async function startWA() {
                 } else if (cmd === '!cekoki') {
                     const khodams = ['Kakek Zeus ⚡', 'Inces Starlight ✨', 'Panda Mahjong 🐼', 'Permen Sugar Rush 🍬', 'Kucing Lucky Neko 🐱'];
                     const khodam = khodams[Math.floor(Math.random() * khodams.length)];
-                    await sock.sendMessage(jid, { text: `🔮 *RAMALAN GACOR MICHELLE* 🔮\n\nHari ini Kakak dijaga oleh Khodam: *${khodam}*\n\nMichelle ramalkan kakak bakal JP Paus kalau main di provider Pragmatic jam sekarang! Gas tipis-tipis kak! 🚀🎰` });
+                    await sock.sendMessage(jid, { text: `🔮 *RAMALAN GACOR MELODY* 🔮\n\nHari ini Kakak dijaga oleh Khodam: *${khodam}*\n\nMelody ramalkan kakak bakal JP Paus kalau main di provider Pragmatic jam sekarang! Gas tipis-tipis kak! 🚀🎰` });
                 }
 
                 // --- ADMIN ASSISTANT ---
                 if (lowerText.includes('admin') || lowerText.includes('@admin')) {
-                    await sock.sendMessage(jid, { text: `Halo Kak! Ada yang bisa Michelle bantu? Admin sedang sibuk memproses antrian depo/wd nih. 🙇‍♀️\n\nSambil nunggu, bisa cek info !gacor dulu ya kak! ✨` });
+                    await sock.sendMessage(jid, { text: `Halo Kak! Ada yang bisa Melody bantu? Admin sedang sibuk memproses antrian depo/wd nih. 🙇‍♀️\n\nSambil nunggu, bisa cek info !gacor dulu ya kak! ✨` });
                 }
 
                 // --- ANTI-SPAM LINK ---
                 if (lowerText.includes('http') || lowerText.includes('.com') || lowerText.includes('.net')) {
                     if (!lowerText.includes('jempol88') && !lowerText.includes('cutt.ly')) {
-                        await sock.sendMessage(jid, { text: `⚠️ *PERINGATAN MICHELLE* ⚠️\n\nKakak dilarang menyebarkan link lain di grup JEMPOL88 ya! Mohon hargai member lain. Michelle laporin admin loh nanti kalau bandel! 🤫👊` });
+                        await sock.sendMessage(jid, { text: `⚠️ *PERINGATAN MELODY* ⚠️\n\nKakak dilarang menyebarkan link lain di grup JEMPOL88 ya! Mohon hargai member lain. Melody laporin admin loh nanti kalau bandel! 🤫👊` });
                     }
                 }
 
